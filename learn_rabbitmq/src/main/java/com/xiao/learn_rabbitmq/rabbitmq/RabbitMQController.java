@@ -72,4 +72,11 @@ public class RabbitMQController {
         User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
         messageSendAndGet.deadSend(user);
     }
+
+    @PostMapping("waitMessage")
+    @ApiOperation("延迟消费")
+    public void waitConsumer() {
+        User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
+        messageSendAndGet.waitConsumer(user);
+    }
 }

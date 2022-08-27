@@ -59,4 +59,6 @@ public interface MessageSendAndGet {
      * @param user
      */
     void deadSend(User user);
+
+    void waitConsumer(User user);
 }

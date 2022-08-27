@@ -5,6 +5,7 @@ import com.xiao.learn_rabbitmq.config.*;
 import com.xiao.learn_rabbitmq.pojo.User;
 import com.xiao.learn_rabbitmq.rabbitmq.RabbitMQController;
 import com.xiao.learn_rabbitmq.service.MessageSendAndGet;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -100,5 +101,15 @@ public class MessageSendAndGetImpl implements MessageSendAndGet {
             message.getMessageProperties().setContentEncoding("UTF-8");
             return message;
         }, new CorrelationData(UUID.randomUUID().toString()));
+    }
+
+    @Override
+    public void waitConsumer(User user) {
+        String id = user.getId();
+        if (Integer.parseInt(id) % 2 == 0) {
+            rabbitTemplate.convertAndSend(RabbitMQConfigDelay.ORDINARY_EXCHANGE, RabbitMQConfigDelay.WAIT_TEN_SECOND_KEY, user, new CorrelationData(UUID.randomUUID().toString()));
+        } else {
+            rabbitTemplate.convertAndSend(RabbitMQConfigDelay.ORDINARY_EXCHANGE, RabbitMQConfigDelay.WAIT_TWENTY_SECOND_KEY, user, new CorrelationData(UUID.randomUUID().toString()));
+        }
     }
 }
