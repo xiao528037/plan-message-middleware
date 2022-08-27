@@ -1,10 +1,12 @@
 server:
   port: 8081
-#spring:
-#  rabbitmq:
-#    listener:
-#      simple:
-#        prefetch: 0
+spring:
+  rabbitmq:
+    listener:
+      simple:
+        retry:
+          enabled: true
+  #        prefetch: 0
 #      addresses: localhost
 #      username: aloneman
 #      password: aloneman

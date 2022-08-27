@@ -1,10 +1,14 @@
 package com.xiao.learn_rabbitmq.consumer;
 
+import com.rabbitmq.client.Channel;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 /**
  * @author aloneMan
@@ -23,7 +27,13 @@ public class Consumer2 implements Consumer {
 
     @Override
     @RabbitHandler
-    public void executor(String message) {
-        System.out.println("queue_b :" + context.getEnvironment().getProperty("server.port") + "> value: " + message);
+    public void executor(String msg, Channel channel, Message message) {
+        try {
+            System.out.println("queue_b :" + context.getEnvironment().getProperty("server.port") + "> value: " + msg);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (Exception e) {
+
+        }
+
     }
 }

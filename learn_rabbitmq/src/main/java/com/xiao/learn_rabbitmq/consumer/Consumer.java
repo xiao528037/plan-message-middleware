@@ -1,5 +1,10 @@
 package com.xiao.learn_rabbitmq.consumer;
 
+import com.rabbitmq.client.Channel;
+import org.springframework.amqp.core.Message;
+
+import java.io.IOException;
+
 /**
  * @author aloneMan
  * @projectName plan-message-middleware
@@ -12,5 +17,5 @@ public interface Consumer {
      *
      * @param message
      */
-    void executor(String message);
+    void executor(String msg, Channel channel, Message message) throws IOException, InterruptedException;
 }
