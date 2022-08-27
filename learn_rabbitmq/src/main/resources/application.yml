@@ -1,0 +1,23 @@
+server:
+  port: 8081
+#spring:
+#  rabbitmq:
+#    listener:
+#      simple:
+#        prefetch: 0
+#      addresses: localhost
+#      username: aloneman
+#      password: aloneman
+#      virtual-host: learn_1
+#      publisher-confirm-type: CORRELATED
+#      publisher-returns: true
+#      port: 5672
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
