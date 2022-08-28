@@ -5,6 +5,7 @@ import com.xiao.learn_rabbitmq.pojo.User;
 import org.springframework.amqp.core.Message;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author aloneMan
@@ -12,11 +13,13 @@ import java.io.IOException;
  * @createTime 2022-08-27 15:40:13
  * @description
  */
-public interface Consumer {
+public abstract class Consumer {
     /**
      * 消息处理
      *
      * @param message
      */
-    void executor(User msg, Channel channel, Message message) throws IOException, InterruptedException;
+    public abstract void executor(User msg, Channel channel, Message message, Map map) throws IOException, InterruptedException;
+
+    public abstract void executor(User msg, Channel channel, Message message) throws IOException, InterruptedException;
 }

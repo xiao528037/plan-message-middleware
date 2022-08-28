@@ -6,6 +6,9 @@ import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
+
 /**
  * @author aloneMan
  * @projectName plan-message-middleware
@@ -23,5 +26,9 @@ public class ConfirmCallbackHandler implements RabbitTemplate.ConfirmCallback {
         } else {
             log.info("消息发送成功,correlationData = {} ,ack = {} cause= {}", correlationData, ack, cause);
         }
+        new FutureTask<>(() -> {
+
+            return 1;
+        });
     }
 }

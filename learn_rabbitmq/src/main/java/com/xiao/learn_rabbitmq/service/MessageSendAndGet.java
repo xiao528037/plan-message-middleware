@@ -1,5 +1,6 @@
 package com.xiao.learn_rabbitmq.service;
 
+import com.xiao.learn_rabbitmq.pojo.User;
 import org.springframework.amqp.core.Message;
 
 /**
@@ -15,18 +16,26 @@ public interface MessageSendAndGet {
      *
      * @param message
      */
-     void commodity(String message);
+    void commodity(String message);
 
     /**
      * 商品秒杀信息
+     *
      * @param message
      */
     void secKill(String message);
 
     /**
      * 批量发送消息
-     * @param message
+     *
+     * @param user
      */
-    void batchSend(String message);
+    void sendAllUser(User user);
+
+    /**
+     * 更具路由和路由键
+     * @param user
+     */
+    void directSend(User user, Integer sendType);
 
 }

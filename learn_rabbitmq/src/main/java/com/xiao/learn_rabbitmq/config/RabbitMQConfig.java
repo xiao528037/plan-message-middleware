@@ -87,7 +87,6 @@ public class RabbitMQConfig {
         return template;
     }
 
-
     /**
      * 自动发送JSON结构或消费时自动将JSON转成相应的对象
      *
@@ -115,7 +114,7 @@ public class RabbitMQConfig {
 
     @Bean
     public RabbitListenerConfigurer rabbitListenerConfigurer() {
-       return new RabbitListenerConfigurer() {
+        return new RabbitListenerConfigurer() {
             @Override
             public void configureRabbitListeners(RabbitListenerEndpointRegistrar registrar) {
                 registrar.setMessageHandlerMethodFactory(messageHandlerMethodFactory());

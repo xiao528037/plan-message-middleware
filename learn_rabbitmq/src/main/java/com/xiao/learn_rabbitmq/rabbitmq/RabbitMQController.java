@@ -1,5 +1,6 @@
 package com.xiao.learn_rabbitmq.rabbitmq;
 
+import com.xiao.learn_rabbitmq.pojo.User;
 import com.xiao.learn_rabbitmq.service.MessageSendAndGet;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -40,5 +42,18 @@ public class RabbitMQController {
     @ApiOperation("秒杀消息")
     public void secKill(String message) {
         messageSendAndGet.secKill(Integer.toString(requestCount.incrementAndGet()));
+    }
+
+    @PostMapping("/notifyAllUser")
+    @ApiOperation("通知用户")
+    public void notifyAllUser(User user) {
+        messageSendAndGet.sendAllUser(user);
+    }
+
+    @PostMapping("/direct_routkey")
+    @ApiOperation("路由发送")
+    public void directRoutingKey(Integer sendType) {
+        User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
+        messageSendAndGet.directSend(user, sendType);
     }
 }
