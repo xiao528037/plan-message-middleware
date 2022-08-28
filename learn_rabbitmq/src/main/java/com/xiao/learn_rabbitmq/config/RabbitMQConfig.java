@@ -4,17 +4,22 @@ package com.xiao.learn_rabbitmq.config;
 import com.xiao.learn_rabbitmq.handler.ConfirmCallbackHandler;
 import com.xiao.learn_rabbitmq.handler.ReturnCallbackHandler;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
+import org.springframework.messaging.handler.annotation.support.MessageHandlerMethodFactory;
 import org.springframework.retry.support.RetryTemplate;
 
 
@@ -62,13 +67,12 @@ public class RabbitMQConfig {
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setAddresses("127.0.0.1:5672");
-        connectionFactory.setUsername("aloneman");
-        connectionFactory.setPassword("aloneman");
+        connectionFactory.setAddresses("42.192.226.64:5672");
+        connectionFactory.setUsername("admin");
+        connectionFactory.setPassword("123456");
         connectionFactory.setVirtualHost("learn_1");
         connectionFactory.setPublisherConfirmType(CachingConnectionFactory.ConfirmType.CORRELATED);
         connectionFactory.setPublisherReturns(true);
-        RabbitProperties.SimpleContainer simpleContainer = new RabbitProperties.SimpleContainer();
         return connectionFactory;
     }
 
@@ -98,11 +102,39 @@ public class RabbitMQConfig {
     public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(SimpleRabbitListenerContainerFactoryConfigurer configurer, ConnectionFactory connectionFactory) {
         SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory =
                 new SimpleRabbitListenerContainerFactory();
-        simpleRabbitListenerContainerFactory.setPrefetchCount(0);
+        //默认
+        simpleRabbitListenerContainerFactory.setPrefetchCount(3);
         //设置消费端手动ack
         simpleRabbitListenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        simpleRabbitListenerContainerFactory.setReceiveTimeout(3000L);
+        simpleRabbitListenerContainerFactory.setBatchSize(10);
+        simpleRabbitListenerContainerFactory.setBatchListener(true);
         configurer.configure(simpleRabbitListenerContainerFactory, connectionFactory);
         return simpleRabbitListenerContainerFactory;
+    }
+
+    // 可以将json串反序列化为对象
+
+    @Bean
+    public RabbitListenerConfigurer rabbitListenerConfigurer() {
+       return new RabbitListenerConfigurer() {
+            @Override
+            public void configureRabbitListeners(RabbitListenerEndpointRegistrar registrar) {
+                registrar.setMessageHandlerMethodFactory(messageHandlerMethodFactory());
+            }
+        };
+    }
+
+    @Bean
+    MessageHandlerMethodFactory messageHandlerMethodFactory() {
+        DefaultMessageHandlerMethodFactory messageHandlerMethodFactory = new DefaultMessageHandlerMethodFactory();
+        messageHandlerMethodFactory.setMessageConverter(mappingJackson2MessageConverter());
+        return messageHandlerMethodFactory;
+    }
+
+    @Bean
+    public MappingJackson2MessageConverter mappingJackson2MessageConverter() {
+        return new MappingJackson2MessageConverter();
     }
 
        /* @Bean

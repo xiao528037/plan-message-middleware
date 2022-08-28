@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author aloneMan
  * @projectName plan-message-middleware
@@ -22,6 +24,7 @@ public class RabbitMQController {
 
     private MessageSendAndGet messageSendAndGet;
 
+    private static AtomicInteger requestCount = new AtomicInteger(0);
 
     public RabbitMQController(MessageSendAndGet messageSendAndGet) {
         this.messageSendAndGet = messageSendAndGet;
@@ -30,12 +33,12 @@ public class RabbitMQController {
     @PostMapping("/commodity")
     @ApiOperation("商品消息")
     public void commodity(String message) {
-        messageSendAndGet.commodity(message);
+        messageSendAndGet.commodity(Integer.toString(requestCount.incrementAndGet()));
     }
 
     @PostMapping("/secKill")
     @ApiOperation("秒杀消息")
     public void secKill(String message) {
-        messageSendAndGet.secKill(message);
+        messageSendAndGet.secKill(Integer.toString(requestCount.incrementAndGet()));
     }
 }

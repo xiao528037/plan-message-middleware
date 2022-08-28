@@ -1,6 +1,7 @@
 package com.xiao.learn_rabbitmq.consumer;
 
 import com.rabbitmq.client.Channel;
+import com.xiao.learn_rabbitmq.pojo.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.ReturnedMessage;
@@ -32,18 +33,27 @@ public class Consumer1 implements Consumer {
 
     @Override
     @RabbitHandler
-    public void executor(String msg, Channel channel, Message message) throws IOException, InterruptedException {
+    public void executor(User msg, Channel channel, Message message) {
         try {
-            TimeUnit.SECONDS.sleep(30);
             log.info("端口: {} 消息接受成功 {}", context.getEnvironment().getProperty("server.port"), msg);
+            int i = 1 / 0;
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-        } catch (IOException e) {
+        } catch (Exception e) {
+
             if (message.getMessageProperties().getRedelivered()) {
                 log.error("消息一重复处理失败，拒绝再次接受....");
-                channel.basicReject(message.getMessageProperties().getDeliveryTag(), false);
+                try {
+                    channel.basicReject(message.getMessageProperties().getDeliveryTag(), false);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             } else {
                 log.error("消息即将在次返回队列处理");
-                channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+                try {
+                    channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
 
         }

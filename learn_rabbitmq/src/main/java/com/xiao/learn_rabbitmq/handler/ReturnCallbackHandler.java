@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
  * @author aloneMan
  * @projectName plan-message-middleware
  * @createTime 2022-08-27 19:10:48
- * @description
+ * @description 未能成功放入到Queue的回调
  */
 @Component
 @Slf4j(topic = "returnCallbackService")
 public class ReturnCallbackHandler implements RabbitTemplate.ReturnsCallback {
     @Override
     public void returnedMessage(ReturnedMessage returned) {
-        log.info("{} ", returned.toString());
+        log.info(">>> {} ", returned.toString());
     }
 }

@@ -23,4 +23,10 @@ public interface MessageSendAndGet {
      */
     void secKill(String message);
 
+    /**
+     * 批量发送消息
+     * @param message
+     */
+    void batchSend(String message);
+
 }
