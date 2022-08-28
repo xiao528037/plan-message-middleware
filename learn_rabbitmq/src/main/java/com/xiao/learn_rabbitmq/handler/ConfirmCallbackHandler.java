@@ -19,7 +19,7 @@ public class ConfirmCallbackHandler implements RabbitTemplate.ConfirmCallback {
     @Override
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
         if (!ack) {
-            log.info("消息发送失败");
+            log.error("消息发送失败,correlationData = {} ,ack = {} cause= {}", correlationData, ack, cause);
         } else {
             log.info("消息发送成功,correlationData = {} ,ack = {} cause= {}", correlationData, ack, cause);
         }

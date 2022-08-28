@@ -36,7 +36,6 @@ public class Consumer1 implements Consumer {
     public void executor(User msg, Channel channel, Message message) {
         try {
             log.info("端口: {} 消息接受成功 {}", context.getEnvironment().getProperty("server.port"), msg);
-            int i = 1 / 0;
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (Exception e) {
 

@@ -67,9 +67,9 @@ public class RabbitMQConfig {
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setAddresses("42.192.226.64:5672");
-        connectionFactory.setUsername("admin");
-        connectionFactory.setPassword("123456");
+        connectionFactory.setAddresses("127.0.0.1:5672");
+        connectionFactory.setUsername("aloneman");
+        connectionFactory.setPassword("aloneman");
         connectionFactory.setVirtualHost("learn_1");
         connectionFactory.setPublisherConfirmType(CachingConnectionFactory.ConfirmType.CORRELATED);
         connectionFactory.setPublisherReturns(true);
@@ -107,8 +107,6 @@ public class RabbitMQConfig {
         //设置消费端手动ack
         simpleRabbitListenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         simpleRabbitListenerContainerFactory.setReceiveTimeout(3000L);
-        simpleRabbitListenerContainerFactory.setBatchSize(10);
-        simpleRabbitListenerContainerFactory.setBatchListener(true);
         configurer.configure(simpleRabbitListenerContainerFactory, connectionFactory);
         return simpleRabbitListenerContainerFactory;
     }

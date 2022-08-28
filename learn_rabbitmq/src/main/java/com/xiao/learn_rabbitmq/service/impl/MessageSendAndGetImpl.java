@@ -48,11 +48,12 @@ public class MessageSendAndGetImpl implements MessageSendAndGet {
     }
 
 
-
     @Override
     public void secKill(String message) {
         User user = new User(message, "test" + message);
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+        ReturnedMessage returnedMessage = new ReturnedMessage(new Message(user.toString().getBytes()), 0, null, null, null);
+        correlationData.setReturned(returnedMessage);
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY + "_b", user, correlationData);
     }
 
