@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.xiao.learn_rabbitmq.config.RabbitMQConfig;
 import com.xiao.learn_rabbitmq.config.RabbitMQConfigDirect;
 import com.xiao.learn_rabbitmq.config.RabbitMQConfigFanout;
+import com.xiao.learn_rabbitmq.config.RabbitMQConfigTopic;
 import com.xiao.learn_rabbitmq.pojo.User;
 import com.xiao.learn_rabbitmq.rabbitmq.RabbitMQController;
 import com.xiao.learn_rabbitmq.service.MessageSendAndGet;
@@ -86,5 +87,9 @@ public class MessageSendAndGetImpl implements MessageSendAndGet {
 
     }
 
-
+    @Override
+    public void topicSend(User user, String topic) {
+        log.info("本次发送的消息 {} ", user);
+        rabbitTemplate.convertAndSend(RabbitMQConfigTopic.EXCHANGE_TOPIC, topic, user, new CorrelationData(UUID.randomUUID().toString()));
+    }
 }

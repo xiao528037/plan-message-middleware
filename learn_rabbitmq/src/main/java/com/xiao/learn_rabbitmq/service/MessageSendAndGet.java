@@ -34,8 +34,18 @@ public interface MessageSendAndGet {
 
     /**
      * 更具路由和路由键
+     *
      * @param user
+     *         消息
+     * @param sendType
+     *         路由键
      */
     void directSend(User user, Integer sendType);
 
+    /**
+     * 主题模式，匹配routingkey的方式发布消息
+     * @param user 消息
+     * @param topic 主题
+     */
+    void topicSend(User user, String routking);
 }

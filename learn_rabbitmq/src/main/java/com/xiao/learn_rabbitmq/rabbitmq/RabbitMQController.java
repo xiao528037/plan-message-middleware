@@ -56,4 +56,13 @@ public class RabbitMQController {
         User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
         messageSendAndGet.directSend(user, sendType);
     }
+
+    @PostMapping("/topic")
+    @ApiOperation("路由匹配发送")
+    public void topicRoutingKey(String routingKey) {
+        User user = new User();
+        user.setUsername(routingKey);
+        user.setId(Integer.toString(requestCount.incrementAndGet()));
+        messageSendAndGet.topicSend(user, routingKey);
+    }
 }
