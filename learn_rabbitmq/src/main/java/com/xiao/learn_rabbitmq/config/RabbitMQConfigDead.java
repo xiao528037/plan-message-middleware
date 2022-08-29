@@ -14,7 +14,7 @@ import java.util.HashMap;
  * @author aloneMan
  * @projectName plan-message-middleware
  * @createTime 2022-08-29 10:16:31
- * @description
+ * @description 死信队列
  */
 @Configuration
 public class RabbitMQConfigDead {
@@ -40,7 +40,7 @@ public class RabbitMQConfigDead {
         //配置queue最大长度，超过这个长度，则进入死信队列
         map.put("x-max-length", 6);
         //配置超时时间，如果指定时间没有被消费，放入到死信队列
-//        map.put("x-message-ttl", 10000);
+        map.put("x-message-ttl", 20000);
         amqpAdmin.declareQueue(new Queue(QUEUE_DIRECT_ORDINARY, true, false, false, map));
         //创建交换机
         amqpAdmin.declareExchange(new DirectExchange(EXCHANGE_ORDINARY, true, false));
@@ -49,5 +49,4 @@ public class RabbitMQConfigDead {
         amqpAdmin.declareBinding(new Binding(QUEUE_DIRECT_ORDINARY, Binding.DestinationType.QUEUE, EXCHANGE_ORDINARY, ROUTING_ORDINARY_KEY, null));
         amqpAdmin.declareBinding(new Binding(QUEUE_DIRECT_DEAD, Binding.DestinationType.QUEUE, EXCHANGE_DEAD, ROUTING_DEAD_KEY, null));
     }
-
 }

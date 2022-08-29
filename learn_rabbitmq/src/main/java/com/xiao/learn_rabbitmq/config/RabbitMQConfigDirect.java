@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
  * @author aloneMan
  * @projectName plan-message-middleware
  * @createTime 2022-08-28 17:08:28
- * @description
+ * @description 交换机直连模式
  */
 @Configuration
 public class RabbitMQConfigDirect {

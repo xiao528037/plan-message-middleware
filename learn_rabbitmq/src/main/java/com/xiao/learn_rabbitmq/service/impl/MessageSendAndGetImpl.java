@@ -96,7 +96,7 @@ public class MessageSendAndGetImpl implements MessageSendAndGet {
 
         rabbitTemplate.convertAndSend(RabbitMQConfigDead.EXCHANGE_ORDINARY, RabbitMQConfigDead.ROUTING_ORDINARY_KEY, user, message -> {
             //配置超时时间进入死信队列
-            //message.getMessageProperties().setExpiration("5000");
+            message.getMessageProperties().setExpiration("5000");
             message.getMessageProperties().setContentEncoding("UTF-8");
             return message;
         }, new CorrelationData(UUID.randomUUID().toString()));

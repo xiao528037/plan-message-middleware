@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
  * @author aloneMan
  * @projectName plan-message-middleware
  * @createTime 2022-08-28 14:54:21
- * @description
+ * @description 交换机扇出模式
  */
 
 @Configuration
