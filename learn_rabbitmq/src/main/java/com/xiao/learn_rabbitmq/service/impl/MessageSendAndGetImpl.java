@@ -121,4 +121,14 @@ public class MessageSendAndGetImpl implements MessageSendAndGet {
             return message;
         }, new CorrelationData(user.getUsername()));
     }
+
+    @Override
+    public void pluginConsumer(User user, int waitTime) {
+        log.info("发送到消息是 {} 延迟消费时间 {}", user, waitTime);
+        rabbitTemplate.convertAndSend(RabbitMQConfigPluginDelay.PLUGIN_WAIT_EXCHANGE, RabbitMQConfigPluginDelay.PLUGIN_WAIT_ROUTING_KEY
+                , user, message -> {
+                    message.getMessageProperties().setHeader("x-delay", waitTime * 1000);
+                    return message;
+                }, new CorrelationData(user.getUsername()));
+    }
 }

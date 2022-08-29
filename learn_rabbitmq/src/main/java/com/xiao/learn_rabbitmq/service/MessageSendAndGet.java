@@ -74,4 +74,13 @@ public interface MessageSendAndGet {
      * @param waitTime
      */
     void customizeSecond(User user, int waitTime);
+
+
+    /**
+     * 基于插件延迟消费
+     *
+     * @param user
+     * @param waitTime
+     */
+    void pluginConsumer(User user, int waitTime);
 }

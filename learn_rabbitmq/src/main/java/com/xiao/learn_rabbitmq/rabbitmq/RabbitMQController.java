@@ -89,4 +89,14 @@ public class RabbitMQController {
         }
         messageSendAndGet.customizeSecond(user, waitTime);
     }
+
+    @PostMapping("pluginConsumer")
+    @ApiOperation("插件延迟消费")
+    public void pluginWait(Integer waitTime) {
+        User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
+        if (waitTime == null) {
+            waitTime = 0;
+        }
+        messageSendAndGet.pluginConsumer(user, waitTime);
+    }
 }
