@@ -1,10 +1,7 @@
 package com.xiao.learn_rabbitmq.service.impl;
 
 import com.rabbitmq.client.Channel;
-import com.xiao.learn_rabbitmq.config.RabbitMQConfig;
-import com.xiao.learn_rabbitmq.config.RabbitMQConfigDirect;
-import com.xiao.learn_rabbitmq.config.RabbitMQConfigFanout;
-import com.xiao.learn_rabbitmq.config.RabbitMQConfigTopic;
+import com.xiao.learn_rabbitmq.config.*;
 import com.xiao.learn_rabbitmq.pojo.User;
 import com.xiao.learn_rabbitmq.rabbitmq.RabbitMQController;
 import com.xiao.learn_rabbitmq.service.MessageSendAndGet;
@@ -51,7 +48,7 @@ public class MessageSendAndGetImpl implements MessageSendAndGet {
 
         User user = new User(message, "test" + message);
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY + "_a", user, correlationData);
+        rabbitTemplate.convertAndSend(SecKillConfiguration.EXCHANGE_NAME, SecKillConfiguration.ROUTING_KEY + "_a", user, correlationData);
     }
 
 
@@ -61,7 +58,7 @@ public class MessageSendAndGetImpl implements MessageSendAndGet {
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
         ReturnedMessage returnedMessage = new ReturnedMessage(new Message(user.toString().getBytes()), 0, null, null, null);
         correlationData.setReturned(returnedMessage);
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY + "_b", user, correlationData);
+        rabbitTemplate.convertAndSend(SecKillConfiguration.EXCHANGE_NAME, SecKillConfiguration.ROUTING_KEY + "_b", user, correlationData);
     }
 
     @Override
@@ -91,5 +88,17 @@ public class MessageSendAndGetImpl implements MessageSendAndGet {
     public void topicSend(User user, String topic) {
         log.info("本次发送的消息 {} ", user);
         rabbitTemplate.convertAndSend(RabbitMQConfigTopic.EXCHANGE_TOPIC, topic, user, new CorrelationData(UUID.randomUUID().toString()));
+    }
+
+    @Override
+    public void deadSend(User user) {
+        log.info("本次发送的消息 {} ", user);
+
+        rabbitTemplate.convertAndSend(RabbitMQConfigDead.EXCHANGE_ORDINARY, RabbitMQConfigDead.ROUTING_ORDINARY_KEY, user, message -> {
+            //配置超时时间进入死信队列
+            //message.getMessageProperties().setExpiration("5000");
+            message.getMessageProperties().setContentEncoding("UTF-8");
+            return message;
+        }, new CorrelationData(UUID.randomUUID().toString()));
     }
 }

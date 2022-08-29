@@ -22,7 +22,6 @@ public class RabbitMQConfigDirect {
     public static final String QUEUE_DIRECT_TWO = "queue_direct_two";
     public static final String QUEUE_DIRECT_THREE = "queue_direct_three";
     public static final String EXCHANGE_DIRECT = "exchange_direct";
-
     public static final String ROUTING_KEY_ONE = "direct_key_one";
     public static final String ROUTING_KEY_TWO = "direct_key_two";
     public static final String ROUTING_KEY_THREE = "direct_key_three";

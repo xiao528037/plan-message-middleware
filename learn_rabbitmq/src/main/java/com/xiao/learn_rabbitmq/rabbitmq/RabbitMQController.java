@@ -65,4 +65,11 @@ public class RabbitMQController {
         user.setId(Integer.toString(requestCount.incrementAndGet()));
         messageSendAndGet.topicSend(user, routingKey);
     }
+
+    @PostMapping("/deadLetter")
+    @ApiOperation(("死信队列"))
+    public void deadLetter() {
+        User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
+        messageSendAndGet.deadSend(user);
+    }
 }

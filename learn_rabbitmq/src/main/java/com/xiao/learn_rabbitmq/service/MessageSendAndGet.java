@@ -2,6 +2,7 @@ package com.xiao.learn_rabbitmq.service;
 
 import com.xiao.learn_rabbitmq.pojo.User;
 import org.springframework.amqp.core.Message;
+import org.springframework.messaging.handler.annotation.Headers;
 
 /**
  * @author aloneMan
@@ -44,8 +45,18 @@ public interface MessageSendAndGet {
 
     /**
      * 主题模式，匹配routingkey的方式发布消息
-     * @param user 消息
-     * @param topic 主题
+     *
+     * @param user
+     *         消息
+     * @param topic
+     *         主题
      */
     void topicSend(User user, String routking);
+
+    /**
+     * 死信队列
+     *
+     * @param user
+     */
+    void deadSend(User user);
 }
