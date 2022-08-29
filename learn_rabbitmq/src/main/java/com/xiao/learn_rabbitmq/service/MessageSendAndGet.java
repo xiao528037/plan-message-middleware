@@ -60,5 +60,18 @@ public interface MessageSendAndGet {
      */
     void deadSend(User user);
 
+    /**
+     * 延迟消费
+     *
+     * @param user
+     */
     void waitConsumer(User user);
+
+    /**
+     * 指定延时时间
+     *
+     * @param user
+     * @param waitTime
+     */
+    void customizeSecond(User user, int waitTime);
 }

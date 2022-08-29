@@ -112,4 +112,13 @@ public class MessageSendAndGetImpl implements MessageSendAndGet {
             rabbitTemplate.convertAndSend(RabbitMQConfigDelay.ORDINARY_EXCHANGE, RabbitMQConfigDelay.WAIT_TWENTY_SECOND_KEY, user, new CorrelationData(UUID.randomUUID().toString()));
         }
     }
+
+    @Override
+    public void customizeSecond(User user, int waitTime) {
+        log.info("发送到消息是 {} 延迟消费时间 {}", user, waitTime);
+        rabbitTemplate.convertAndSend(RabbitMQConfigDelay.ORDINARY_EXCHANGE, RabbitMQConfigDelay.WAIT_CUSTOMIZE_SECOND_KEY, user, message -> {
+            message.getMessageProperties().setExpiration(Integer.toString(waitTime * 1000));
+            return message;
+        }, new CorrelationData(user.getUsername()));
+    }
 }

@@ -24,7 +24,7 @@ public class ConfirmCallbackHandler implements RabbitTemplate.ConfirmCallback {
         if (!ack) {
             log.error("消息发送失败,correlationData = {} ,ack = {} cause= {}", correlationData, ack, cause);
         } else {
-//            log.info("消息发送成功,correlationData = {} ,ack = {} cause= {}", correlationData, ack, cause);
+            log.info("消息发送成功,correlationData = {} ,ack = {} cause= {}", correlationData, ack, cause);
         }
     }
 }

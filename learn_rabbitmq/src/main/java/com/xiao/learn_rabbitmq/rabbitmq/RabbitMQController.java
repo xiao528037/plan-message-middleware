@@ -79,4 +79,14 @@ public class RabbitMQController {
         User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
         messageSendAndGet.waitConsumer(user);
     }
+
+    @PostMapping("customizeSecond")
+    @ApiOperation("指定延迟时间")
+    public void customizeSecond(Integer waitTime) {
+        User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
+        if (waitTime == null) {
+            waitTime = 0;
+        }
+        messageSendAndGet.customizeSecond(user, waitTime);
+    }
 }
