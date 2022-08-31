@@ -83,4 +83,21 @@ public interface MessageSendAndGet {
      * @param waitTime
      */
     void pluginConsumer(User user, int waitTime);
+
+    /**
+     * 基于消息回退的机制确认消息是否成功
+     *
+     * @param user
+     */
+    void confirmMessage(User user);
+
+    /**
+     * 基于备份交换机的方式确认消息是否成功
+     */
+    void backupExchangeMessage(User user);
+
+    /**
+     * 优先队列
+     */
+    void priorityMessage(User user, Integer priority);
 }

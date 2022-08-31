@@ -6,7 +6,11 @@ spring:
       simple:
         retry:
           enabled: true
-  #        prefetch: 0
+#    publisher-confirm-type: correlated
+#    publisher-returns: true
+#    template:
+#      mandatory: true
+#        prefetch: 0
 #      addresses: localhost
 #      username: aloneman
 #      password: aloneman

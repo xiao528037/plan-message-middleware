@@ -99,4 +99,25 @@ public class RabbitMQController {
         }
         messageSendAndGet.pluginConsumer(user, waitTime);
     }
+
+    @PostMapping("confirmMessage")
+    @ApiOperation("回退机制消息确认")
+    public void confirmMessage() {
+        User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
+        messageSendAndGet.confirmMessage(user);
+    }
+
+    @PostMapping("backupExchangeConfirm")
+    @ApiOperation("备份交换机消息确认")
+    public void backupExchange() {
+        User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
+        messageSendAndGet.backupExchangeMessage(user);
+    }
+
+    @PostMapping("priorityQueue")
+    @ApiOperation("优先队列")
+    public void priorityQueue(Integer priority) {
+        User user = new User(Integer.toString(requestCount.incrementAndGet()), UUID.randomUUID().toString());
+        messageSendAndGet.priorityMessage(user, priority);
+    }
 }

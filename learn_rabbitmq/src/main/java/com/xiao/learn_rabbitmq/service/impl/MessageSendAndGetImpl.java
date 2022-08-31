@@ -1,23 +1,13 @@
 package com.xiao.learn_rabbitmq.service.impl;
 
-import com.rabbitmq.client.Channel;
 import com.xiao.learn_rabbitmq.config.*;
 import com.xiao.learn_rabbitmq.pojo.User;
-import com.xiao.learn_rabbitmq.rabbitmq.RabbitMQController;
 import com.xiao.learn_rabbitmq.service.MessageSendAndGet;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.annotation.RabbitListeners;
-import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -125,10 +115,48 @@ public class MessageSendAndGetImpl implements MessageSendAndGet {
     @Override
     public void pluginConsumer(User user, int waitTime) {
         log.info("发送到消息是 {} 延迟消费时间 {}", user, waitTime);
+        CorrelationData correlationData = new CorrelationData(user.getUsername());
+
         rabbitTemplate.convertAndSend(RabbitMQConfigPluginDelay.PLUGIN_WAIT_EXCHANGE, RabbitMQConfigPluginDelay.PLUGIN_WAIT_ROUTING_KEY
                 , user, message -> {
                     message.getMessageProperties().setHeader("x-delay", waitTime * 1000);
                     return message;
                 }, new CorrelationData(user.getUsername()));
+    }
+
+    @Override
+    public void confirmMessage(User user) {
+        CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+        rabbitTemplate.convertAndSend(RabbitMQConfigConfirm.CONFIRM_EXCHANGE, RabbitMQConfigConfirm.CONFIRM_QUEUE_KEY + "123", user, message1 -> {
+            message1.getMessageProperties().setHeader("contentType", "application/json");
+            return message1;
+        }, correlationData);
+    }
+
+    @Override
+    public void backupExchangeMessage(User user) {
+        String id = user.getId();
+        if (Integer.parseInt(id) % 2 == 0) {
+            CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+            rabbitTemplate.convertAndSend(RabbitMQConfigBackupExchange.BACKUP_ORDINARY_EXCHANGE, RabbitMQConfigBackupExchange.BACKUP_CONFIRM_QUEUE, user, message1 -> {
+                message1.getMessageProperties().setHeader("contentType", "application/json");
+                return message1;
+            }, correlationData);
+        } else {
+            CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+            rabbitTemplate.convertAndSend(RabbitMQConfigBackupExchange.BACKUP_ORDINARY_EXCHANGE, RabbitMQConfigBackupExchange.BACKUP_CONFIRM_QUEUE + "123", user, message1 -> {
+                message1.getMessageProperties().setHeader("contentType", "application/json");
+                return message1;
+            }, correlationData);
+        }
+    }
+
+    @Override
+    public void priorityMessage(User user, Integer priority) {
+        rabbitTemplate.convertAndSend(RabbitMQConfigLazyQueue.EXCHANGE_PRIORITY, RabbitMQConfigLazyQueue.PRIORITY_KEY, user, message -> {
+            message.getMessageProperties().setPriority(priority);
+            message.getMessageProperties().setHeader("contentType", "application/json");
+            return message;
+        }, new CorrelationData(UUID.randomUUID().toString()));
     }
 }
