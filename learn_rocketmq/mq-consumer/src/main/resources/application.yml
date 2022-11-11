@@ -1,0 +1,9 @@
+server:
+  port: 8200
+spring:
+  application:
+    name: consumer
+rocketmq:
+  name-server: 192.168.2.110:9876;192.168.2.120:9876
+  consumer:
+    group: one_consumer
