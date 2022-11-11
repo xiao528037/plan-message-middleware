@@ -5,6 +5,7 @@ import com.xiao.mqcommon.entity.TestMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
+import org.apache.rocketmq.spring.annotation.SelectorType;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class GeneralMessagesConsumer {
      * 消费主题为general_topic的所有消息
      */
     @Service
-    @RocketMQMessageListener(topic = "general_topic", consumerGroup = "consumer_one_group")
+    @RocketMQMessageListener(topic = "general_topic", selectorType = SelectorType.SQL92, selectorExpression = "age >= 12", consumerGroup = "consumer_one_group")
     public class ConsumerOne implements RocketMQListener<MessageExt> {
 
         @Override
@@ -50,7 +51,7 @@ public class GeneralMessagesConsumer {
      * 接受主题为general_topic，并且tag的主题是tag_n2的消息，此消息携带了key
      */
     @Service
-    @RocketMQMessageListener(topic = "general_topic", selectorExpression = "tag_n2", consumerGroup = "consumer_three_group")
+    @RocketMQMessageListener(topic = "general_topic", selectorType = SelectorType.SQL92, selectorExpression = "age < 12", consumerGroup = "consumer_three_group")
     public class ConsumerThree implements RocketMQListener<MessageExt> {
         @Override
         public void onMessage(MessageExt message) {

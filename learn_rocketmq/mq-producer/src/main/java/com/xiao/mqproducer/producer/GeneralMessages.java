@@ -44,13 +44,14 @@ public class GeneralMessages {
      * @return
      */
     @PostMapping("sendGeneralMessage")
-    public void sendGeneralMessage() {
+    public TestMessage sendGeneralMessage() {
         String body = "Send general message";
         TestMessage testMessage = new TestMessage();
         testMessage.setMessageId(count.getAndIncrement());
         testMessage.setMessageBody(body + count.get());
         Message<TestMessage> message = MessageBuilder.withPayload(testMessage).build();
         rocketMQTemplate.convertAndSend("general_topic", message);
+        return testMessage;
     }
 
 
@@ -60,26 +61,31 @@ public class GeneralMessages {
      * @return
      */
     @PostMapping("sendMessageCarryTag")
-    public void sendMessageCarryTag() {
+    public TestMessage sendMessageCarryTag() {
         String body = "Send carry tag  message";
         TestMessage testMessage = new TestMessage();
         testMessage.setMessageId(count.getAndIncrement());
         testMessage.setMessageBody(body + count.get());
         Message<TestMessage> message = MessageBuilder.withPayload(testMessage).build();
         rocketMQTemplate.convertAndSend("general_topic:tag_n1", message);
+        return testMessage;
     }
 
     /**
      * 发送带tag 和 key的消息
      */
     @PostMapping("/sendMessageCarryTagAndKey")
-    public void send() {
+    public TestMessage send() {
         String body = "Send carry tag and key  message";
-        TestMessage testMessage = new TestMessage();
-        testMessage.setMessageBody(body + count);
+        TestMessage message = new TestMessage();
+        message.setMessageBody(body + count);
         long count = this.count.getAndIncrement();
-        testMessage.setMessageId(count);
-        Message<TestMessage> message = MessageBuilder.withPayload(testMessage).setHeader(RocketMQHeaders.KEYS, UUID.randomUUID().toString()).setHeader("age", count).build();
-        rocketMQTemplate.convertAndSend("general_topic:tag_n2", message);
+        message.setMessageId(count);
+
+        HashMap<String, Object> headers = new HashMap<>(2);
+        headers.put("age", count);
+
+        rocketMQTemplate.convertAndSend("general_topic:tag_n2", message, headers);
+        return message;
     }
 }
