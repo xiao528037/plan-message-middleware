@@ -1,4 +1,4 @@
-package com.xiao.mqproducer.consumer;
+package com.xiao.mqconsumer.consumer;
 
 import com.xiao.mqproducer.entity.TestMessage;
 import lombok.extern.slf4j.Slf4j;

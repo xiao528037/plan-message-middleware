@@ -1,4 +1,4 @@
-package com.xiao.mqproducer.entity;
+package com.xiao.mqcommon.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
