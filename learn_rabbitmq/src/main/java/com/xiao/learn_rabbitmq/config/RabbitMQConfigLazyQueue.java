@@ -12,7 +12,7 @@ import java.util.Map;
  * @author aloneMan
  * @projectName plan-message-middleware
  * @createTime 2022-08-30 19:47:39
- * @description
+ * @description 优先队列
  */
 
 @Configuration
