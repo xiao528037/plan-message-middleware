@@ -114,4 +114,9 @@ class MqProducerApplicationTests {
         });
         consumer.start();
     }
+
+    @Test
+    public void t3(){
+        log.info("{}",6%3);
+    }
 }

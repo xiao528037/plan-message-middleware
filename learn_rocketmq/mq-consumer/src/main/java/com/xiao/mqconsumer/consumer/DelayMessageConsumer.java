@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Component
 @Slf4j
-public class DelayMessage {
+public class DelayMessageConsumer {
     @Service
     @RocketMQMessageListener(topic = "delay_topic", consumerGroup = "delay_consumer_one")
     public class DelayConsumerMessage implements RocketMQListener<TestMessage> {
