@@ -4,9 +4,9 @@ spring:
   application:
     name: producer
 rocketmq:
-  name-server: 192.168.2.110:9876;192.168.2.120:9876
+  nameServer: 192.168.2.110:9876;192.168.2.120:9876
   producer:
-    group: one_group
+    group: producer_group
     retry-times-when-send-failed: 3
     retry-times-when-send-async-failed: 3
     send-message-timeout: 2000

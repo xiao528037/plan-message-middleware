@@ -54,7 +54,6 @@ public class GeneralMessages {
         return testMessage;
     }
 
-
     /**
      * 发送带tag的消息
      *
