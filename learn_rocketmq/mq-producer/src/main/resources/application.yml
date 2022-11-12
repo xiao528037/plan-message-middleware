@@ -10,5 +10,7 @@ rocketmq:
     retry-times-when-send-failed: 3
     retry-times-when-send-async-failed: 3
     send-message-timeout: 2000
+    # 最大消息容量，默认4m
+    max-message-size: 4194304
 
 

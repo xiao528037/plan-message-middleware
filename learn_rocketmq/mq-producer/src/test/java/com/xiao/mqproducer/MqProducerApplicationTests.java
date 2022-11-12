@@ -1,5 +1,7 @@
 package com.xiao.mqproducer;
 
+import com.xiao.mqcommon.entity.TestMessage;
+import com.xiao.mqproducer.utils.SplitMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -17,12 +19,14 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.messaging.support.MessageBuilder;
+
 
 import java.io.UnsupportedEncodingException;
+import java.lang.instrument.Instrumentation;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 //@SpringBootTest
 
@@ -115,8 +119,24 @@ class MqProducerApplicationTests {
         consumer.start();
     }
 
+    private final AtomicLong count = new AtomicLong(0);
+
+
     @Test
-    public void t3(){
-        log.info("{}",6%3);
+    public void t3() {
+        ArrayList<TestMessage> messageList = new ArrayList<>();
+        for (int i = 0; i < 100000; i++) {
+            TestMessage testMessage = new TestMessage();
+            long count = this.count.getAndIncrement();
+            testMessage.setMessageId(count);
+            testMessage.setMessageBody("消息条数为 >>> " + count);
+            messageList.add(testMessage);
+        }
+        SplitMessage<TestMessage> iterator = new SplitMessage<>(1024 * 1024 * 4, messageList);
+        while (iterator.hasNext()) {
+            List<TestMessage> next = iterator.next();
+            System.out.println(next.toString().getBytes());
+
+        }
     }
 }
