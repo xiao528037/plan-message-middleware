@@ -20,6 +20,7 @@
     <modules>
         <module>learn_rabbitmq</module>
         <module>learn_rocketmq</module>
+        <module>learn-cloud-stream</module>
     </modules>
     <dependencyManagement>
         <dependencies>

@@ -1,0 +1,63 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: rabbitmq-stream-learn
+  cloud:
+    stream:
+      binders:
+        rocketBinder:
+          type: rocketmq
+          environment:
+            rocketmq:
+              name-server: 192.168.2.110:9876;192.168.2.120:9876
+              producer:
+                group: rocket_producer
+                retry-times-when-send-failed: 3
+                retry-times-when-send-async-failed: 3
+                send-message-timeout: 2000
+              consumer:
+                group: rocket_consumer
+                topic: streamExchange
+        rabbitBinder:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: localhost
+                port: 5672
+                username: aloneman
+                password: aloneman
+                virtual-host: learn_1
+      default-binder: rabbitBinder
+
+      bindings:
+        output:
+          #          binder: rocketBinder
+          destination: streamExchange
+          content-type: application/json
+          group: stream
+          producer:
+            partition-count: 2
+            #            partition-key-expression: 1
+            partition-key-extractor-name: myPartitionKeyExtractor
+            partition-selector-name: myKeySelector
+        input:
+          #          binder: rocketBinder
+          destination: streamExchange
+          content-type: application/json
+          group: stream
+          consumer:
+            max-attempts: 3
+            partitioned: true
+            instance-count: 2
+            instance-index: 1
+
+      rabbit:
+        bindings:
+          input:
+            consumer:
+              queue-name-group-only: true
+
+

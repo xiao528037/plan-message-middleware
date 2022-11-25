@@ -1,0 +1,57 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: rabbitmq-stream-learn
+  cloud:
+    stream:
+      function:
+        #        definition: source;transfer;sink
+        definition: transfer;sink;gather
+      binders:
+        rabbitBinder:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: localhost
+                port: 5672
+                username: aloneman
+                password: aloneman
+                virtual-host: learn_1
+      default-binder: rabbitBinder
+      rabbit:
+        bindings:
+          input:
+            consumer:
+              queue-name-group-only: true
+      bindings:
+        #        source-out-0:
+        #          destination: test1
+        output:
+          destination: test1
+        transfer-in-0:
+          destination: test1
+          group: transfer
+        transfer-out-0:
+          destination: test2
+        sink-in-0:
+          destination: test2
+          group: sink
+        gather1:
+          destination: input1
+        gather2:
+          destination: input2
+        gather-in-0:
+          destination: input1
+          group: gather1
+        gather-in-1:
+          destination: input2
+          group: gather2
+        gather-out-0:
+          destination: test2
+
+
+
+
